@@ -1,59 +1,45 @@
-# CCNA 1 Lab 3: Multi-Subnet DHCP Allocation and HTTP Service Routing
+# Cybersecurity Lab 1: SSH Brute-Force Simulation and Traffic Analysis
 
-![Cisco](https://img.shields.io/badge/Cisco-Packet_Tracer-049fd9?style=for-the-badge&logo=cisco&logoColor=white)
-![DHCP](https://img.shields.io/badge/Services-DHCP-orange?style=for-the-badge)
-![HTTP](https://img.shields.io/badge/Protocols-HTTP-success?style=for-the-badge)
+![Kali Linux](https://img.shields.io/badge/OS-Kali_Linux-557C94?style=for-the-badge&logo=kali-linux&logoColor=white)
+![Wireshark](https://img.shields.io/badge/Tool-Wireshark-1679A7?style=for-the-badge&logo=wireshark&logoColor=white)
+![Hydra](https://img.shields.io/badge/Tool-THC_Hydra-darkred?style=for-the-badge)
 
 ## Abstract
-This laboratory demonstrates the configuration of a central router to manage multiple broadcast domains. The objective is to implement dual Dynamic Host Configuration Protocol (DHCP) pools on a single router, providing distinct network parameters to separate subnets, and to verify inter-subnet routing by accessing a dedicated HTTP web server.
+This repository documents a local simulation of a dictionary-based brute-force attack against a Secure Shell (SSH) service. The laboratory involves verifying the target service, establishing a packet capture to analyze the network footprint of the attack, and utilizing THC-Hydra to crack the target credentials via a standard wordlist.
 
-## Topology Architecture
-![Network Topology](/images/37.png)
+## Environment Setup
+* *Operating System:* Kali Linux (VirtualBox Virtual Machine)
+* *Target IP Address:* 10.0.2.15 (Local NAT Interface)
+* *Target Service:* OpenSSH server (TCP Port 22)
+* *Tools Utilized:* systemctl, ping, Wireshark, THC-Hydra
+* *Wordlist:* rockyou.txt
 
-The infrastructure consists of two primary networks routed through a central gateway (Router0):
-* *Client Subnet (1.0.0.0/8):* Connected via GigabitEthernet0/0 (Gateway IP: 1.0.0.1). Contains a Layer 2 switch (Switch1) and end-user clients (PC0, Laptop3).
-* *Server Subnet (2.0.0.0/8):* Connected via GigabitEthernet0/1 (Gateway IP: 2.0.0.1). Contains a static infrastructure device, Server0, hosting HTTP services.
+## Execution Phases
 
-## Device Configurations
+### 1. Service and Connectivity Verification
+Prior to the attack simulation, the OpenSSH service status is validated to ensure the daemon is actively running and listening for incoming connections. External network connectivity is also confirmed via ICMP echo requests.
 
-### Router0 (r1)
-The router is configured with two distinct DHCP pools (Pool_test1 and Pool_test2) to dynamically assign IP addresses, default gateways, and DNS servers to the respective subnets while excluding the gateway interfaces from the leasing pool.
+![SSH Service Status](cyber2.jpeg)
 
-![Router DHCP Pool 1 Configuration](/images/31.png)
-![Router DHCP Pool 2 Configuration](/images/32.png)
-
-text
-hostname r1
-!
-ip dhcp excluded-address 1.0.0.1
-ip dhcp excluded-address 2.0.0.1
-!
-ip dhcp pool Pool_test1
- network 1.0.0.0 255.0.0.0
- default-router 1.0.0.1
- dns-server 1.0.0.1
-!
-ip dhcp pool Pool_test2
- network 2.0.0.0 255.0.0.0
- default-router 2.0.0.1
- dns-server 2.0.0.1
+bash
+sudo systemctl status ssh
+ping 1.1.1.1
 
 
-### Server0 (HTTP Server)
-The server is statically assigned an IP address within the 2.0.0.0/8 subnet to ensure consistent reachability for web services.
+### 2. Network Traffic Monitoring
+Wireshark is initialized to capture traffic on the active network interface. A display filter (tcp.port == 22) is applied to isolate SSH communication. This allows for the observation of TCP handshakes and the high volume of encrypted packets generated during the authentication attempts.
 
-![Server0 Static Configuration](/images/34.png)
+![Wireshark Packet Capture](cyber3.jpeg)
 
-## Verification and Testing
+### 3. Brute-Force Execution
+A dictionary attack is launched against the local SSH service using THC-Hydra. The attack targets the known username kali and iterates through the rockyou.txt payload to systematically guess the authentication phrase.
 
-1. *Dynamic Addressing Validation:* Client machines successfully leased IPv4 configurations from the router's Pool_test1 scope.
-    * PC0 acquired 1.0.0.3/8
-    ![PC0 IP Configuration](/images/35.png)
-    * Laptop3 acquired 1.0.0.2/8
-    ![Laptop3 IP Configuration](/images/36.png)
+![Hydra Execution and Success](cyber1.jpeg)
 
-2. *Inter-Subnet Routing (ICMP):* Packet Tracer simulation verifies successful bi-directional ICMP echo requests and replies across the router between the 1.0.0.0/8 client subnet and the 2.0.0.0/8 server subnet.
-    ![ICMP Simulation Verification](/images/38.png)
+bash
+hydra -l kali -P /usr/share/wordlists/rockyou.txt 10.0.2.15 ssh
 
-3. *Application Layer Connectivity (HTTP):* Successful resolution and rendering of the HTTP service hosted on Server0 via port 80, confirming application-level accessibility across the routed infrastructure.
-    ![HTTP Web Service Verification](/images/39.png)
+
+## Verification and Analysis
+1. *Compromise Confirmed:* The Hydra utility successfully completed the attack vector, identifying the valid credentials: login: kali and password: 12345678.
+2. *Traffic Footprint:* The packet capture demonstrates a rapid succession of TCP connections (SYN, SYN-ACK, ACK), followed immediately by SSHv2 encrypted payload exchanges and connection resets (RST). This high-frequency connection cycling is the primary network signature of an automated brute-force attack.
