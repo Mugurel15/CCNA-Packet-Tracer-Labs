@@ -20,7 +20,7 @@ An initial brute-force attack via THC-Hydra was initiated against the FTP servic
 
 Using the standard command-line FTP client, a connection was established to 192.168.14.18. Authentication was successfully bypassed by supplying the username anon and a blank password.
 
-![Anonymous FTP Authentication](cyber(3).png)
+![Anonymous FTP Authentication](/images/cyber(3).png)
 
 bash
 ftp 192.168.14.18
@@ -33,7 +33,7 @@ Password:
 ### 2. Directory Enumeration and Asset Discovery
 Upon successful login, the session was switched to binary mode. A directory listing was requested to map the remote user's home directory.
 
-![FTP Directory Listing](cyber(4).jpg)
+![FTP Directory Listing](/images/cyber(4).png)
 
 ## Verification and Analysis
 1. *Access Confirmed:* The FTP daemon (GNU inetutils 2.8) is improperly configured, granting shell-level read access to the anon user directory without requiring valid credential pairs.
