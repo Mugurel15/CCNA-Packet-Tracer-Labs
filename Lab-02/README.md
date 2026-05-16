@@ -17,9 +17,9 @@ This repository documents the configuration of a Cisco router to provide dynamic
 ### Router (r1)
 The following configuration applies the base system settings, configures the DHCP server, generates RSA crypto keys, and locks down remote access to SSH only.
 
-![Router Configuration Phase 1](11.png)
-![Router Configuration Phase 2](16.png)
-![Router Configuration Phase 3](18.png)
+![Router Configuration Phase 1](/images/11.png)
+![Router Configuration Phase 2](/images/16.png)
+![Router Configuration Phase 3](/images/18.png)
 
 text
 hostname r1
@@ -49,8 +49,8 @@ line vty 0 4
 
 ## Verification and Testing
 1. *DHCP Validation:* Client endpoints successfully receive dynamic IPv4 configurations from the r1 pool.
-    ![DHCP Setup Logs](14.png)
-    ![DHCP Setup Logs 2](15.png)
+    ![DHCP Setup Logs](/images/14.png)
+    ![DHCP Setup Logs 2](/images/15.png)
 2. *Secure Remote Access (SSH):* Verified remote connectivity from client endpoints to the router's gateway interface (1.0.0.1) using the SSH protocol. Successful authentication via the local user database and execution of privileged commands (show run).
-    ![SSH Verification PC0](19.png)
-    ![SSH Verification PC2](20.png)
+    ![SSH Verification PC0](/images/19.png)
+    ![SSH Verification PC2](/images/20.png)
