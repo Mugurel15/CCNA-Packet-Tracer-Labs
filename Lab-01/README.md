@@ -8,7 +8,7 @@
 This repository details the configuration and verification of a network topology utilizing a Cisco 2911 Router and a Cisco 3560-24PS Multilayer Switch. The primary objective is to establish end-to-end ICMP connectivity between two distinct subnets by implementing static routing, IP routing on a Layer 3 switch, and dynamic host configuration protocol (DHCP) services.
 
 ## Topology Architecture
-![Network Topology](1.png)
+![Network Topology](/images/1.png)
 
 The network consists of three primary subnets connected via physical interfaces and routed ports:
 * **Subnet A (1.0.0.0/8):** Hosts `PC0` (DHCP client). The default gateway is `Router0` (Gig0/0: `1.0.0.1`).
@@ -20,8 +20,8 @@ The network consists of three primary subnets connected via physical interfaces 
 ### Router0 (r1)
 Responsible for acting as the DHCP server for Subnet A and routing traffic across the transit link via a static route.
 
-![Router0 Configuration Part 1](3.png)
-![Router0 Configuration Part 2](4.png)
+![Router0 Configuration Part 1](/images/3.png)
+![Router0 Configuration Part 2](/images/4.png)
 
 ```text
 hostname r1
@@ -48,8 +48,8 @@ ip route 3.0.0.0 255.0.0.0 2.0.0.2
 ### Multilayer Switch0 (sw1r2)
 Operating as a Layer 3 routing device. It utilizes routed ports (`no switchport`), serves DHCP for Subnet B, and routes traffic back to Subnet A.
 
-![Switch0 Configuration Part 1](5.png)
-![Switch0 Configuration Part 2](6.png)
+![Switch0 Configuration Part 1](/images/5.png)
+![Switch0 Configuration Part 2](/images/6.png)
 
 ```text
 hostname sw1r2
@@ -80,8 +80,8 @@ ip route 1.0.0.0 255.0.0.0 2.0.0.1
 ## Verification and Testing
 1. **DHCP Allocation:** Validated that both endpoints successfully obtained IPv4 configurations dynamically.
     * `PC0` assigned `1.0.0.2/8`
-    ![PC0 DHCP Configuration](2.png)
+    ![PC0 DHCP Configuration](/images/2.png)
     * `PC1` assigned `3.0.0.2/8`
-    ![PC1 DHCP Configuration](8.png)
+    ![PC1 DHCP Configuration](/images/8.png)
 2. **End-to-End Connectivity:** ICMP Echo Requests and Replies successfully traverse the Layer 3 boundaries. Packet Tracer PDU lists confirm bi-directional communication between `PC0` and `PC1` is operational.
-    ![Connectivity Verification](7.png)
+    ![Connectivity Verification](/images/7.png)
