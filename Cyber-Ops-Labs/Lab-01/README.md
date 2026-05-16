@@ -19,7 +19,7 @@ This repository documents a local simulation of a dictionary-based brute-force a
 ### 1. Service and Connectivity Verification
 Prior to the attack simulation, the OpenSSH service status is validated to ensure the daemon is actively running and listening for incoming connections. External network connectivity is also confirmed via ICMP echo requests.
 
-![SSH Service Status](cyber2.jpeg)
+![SSH Service Status](/images/cyber2.jpeg)
 
 bash
 sudo systemctl status ssh
@@ -29,12 +29,12 @@ ping 1.1.1.1
 ### 2. Network Traffic Monitoring
 Wireshark is initialized to capture traffic on the active network interface. A display filter (tcp.port == 22) is applied to isolate SSH communication. This allows for the observation of TCP handshakes and the high volume of encrypted packets generated during the authentication attempts.
 
-![Wireshark Packet Capture](cyber3.jpeg)
+![Wireshark Packet Capture](/images/cyber3.jpeg)
 
 ### 3. Brute-Force Execution
 A dictionary attack is launched against the local SSH service using THC-Hydra. The attack targets the known username kali and iterates through the rockyou.txt payload to systematically guess the authentication phrase.
 
-![Hydra Execution and Success](cyber1.jpeg)
+![Hydra Execution and Success](/images/cyber1.jpeg)
 
 bash
 hydra -l kali -P /usr/share/wordlists/rockyou.txt 10.0.2.15 ssh
