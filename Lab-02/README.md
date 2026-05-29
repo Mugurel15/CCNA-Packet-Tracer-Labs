@@ -16,7 +16,7 @@ This repository documents the configuration of a Cisco router to provide dynamic
 
 ### Router (r1)
 The following configuration applies the base system settings, configures the DHCP server, generates RSA crypto keys, and locks down remote access to SSH only.
-
+![Router Configuration Phase 1](/images/25.png)
 ![Router Configuration Phase 1](/images/11.png)
 ![Router Configuration Phase 2](/images/16.png)
 ![Router Configuration Phase 3](/images/18.png)
